@@ -1,14 +1,49 @@
 <ion-header>
   <ion-navbar>
     <ion-title>
-      Ionic Blank
+      Podcastr
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  The world is your oyster.
-  <p>
-    If you get lost, the <a href="http://ionicframework.com/docs/v2">docs</a> will be your guide.
-  </p>
+  <div text-center>
+    <h1>Timer</h1>
+  </div>
+  <h2 text-center>
+    <div>
+      {{ formatTime(time) }}
+    </div>
+    <br />
+    <button ion-button color="danger" (click)="stopStopwatch()">Stop</button>
+    <button ion-button color="secondary" (click)="startStopwatch()">Start</button>
+    <br />
+    <button ion-button color="default" (click)="resetStopwatch()">Reset</button>
+  </h2>
+  <ion-list text-center>
+    <p>Click the buttons below to store timestamps.</p>
+    <button ion-button color="default" round (click)="populateText(time, 'button 1')">
+      Button 1
+    </button>
+    <button ion-button color="default" round (click)="populateText(time, 'button 2')">
+      Button 2
+    </button>
+    <button ion-button color="default" round (click)="populateText(time, 'button 3')">
+      Button 3
+    </button>
+    <button ion-button color="default" round (click)="populateText(time, 'button 4')">
+      Button 4
+    </button>
+    <button ion-button color="default" round (click)="populateText(time, 'button 5')">
+      Button 5
+    </button>
+    <button ion-button color="default" round (click)="populateText(time, 'button 6')">
+      Button 6
+    </button>
+  </ion-list>
+  <div>
+    <textarea class="text-full" cols="40" rows="10" [(ngModel)]="timeLog" #ctrl="ngModel">
+      {{ timeLog }}
+    </textarea>
+  </div>
 </ion-content>
