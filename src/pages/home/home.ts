@@ -50,9 +50,6 @@ export class HomePage {
   }
 
   resetStopwatch() {
-    if (this.started) {
-      this.stopStopwatch();
-    }
     this.stopwatchService.reset();
     this.time = 0;
     this.started = false;
