@@ -17,7 +17,7 @@ export class StopwatchService {
     }
 
     start() {
-        this.startAt = this._now();
+        this.startAt = this.startAt || this._now();
     }
 
     update() {

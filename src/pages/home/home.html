@@ -9,11 +9,10 @@
 <ion-content padding>
   <h1 text-center>
     {{ formatTime(time) }}
-    <!-- {{ simpleFormatter(time) }} -->
     <br />
     <button ion-button block color="danger" (click)="stopStopwatch()" *ngIf="started">Stop</button>
     <button ion-button block color="secondary" (click)="startStopwatch()" *ngIf="!started">Start</button>
-    <button ion-button block color="default" (click)="resetStopwatch()">Reset</button>
+    <button ion-button block color="default" [disabled]="started" (click)="resetStopwatch()">Reset</button>
   </h1>
   <ion-list text-center>
     <div *ngFor="let val of values;" class="inline-block">
@@ -24,5 +23,8 @@
     <textarea class="text-full" cols="40" rows="10" [(ngModel)]="timeLog" #ctrl="ngModel">
       {{ timeLog }}
     </textarea>
+    <div text-center>
+      <button ion-button color="danger" id="clearButton" round [disabled]="started" (click)="clearText()">Clear</button>
+    </div>
   </div>
 </ion-content>

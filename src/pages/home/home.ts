@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, Platform, AlertController } from 'ionic-angular';
 import { StopwatchService } from './StopwatchService';
 import { SmartAudioProvider } from '../../providers/smart-audio/smart-audio';
 
@@ -14,16 +14,20 @@ export class HomePage {
   button: string = '';
   stopwatchService: StopwatchService;
   smartAudioProvider: SmartAudioProvider;
+  alertController: AlertController;
   timer: any;
   values: string[];
 
-  constructor(public navCtrl: NavController, stopwatchService: StopwatchService, smartAudioProvider: SmartAudioProvider) {
+  constructor(public navCtrl: NavController, alertController: AlertController, platform: Platform, stopwatchService: StopwatchService, smartAudioProvider: SmartAudioProvider) {
     this.stopwatchService = stopwatchService;
     this.smartAudioProvider = smartAudioProvider;
+    this.alertController = alertController;
     this.time = 0;
     this.started = false;
     this.values = ["button 1", "button 2", "button 3", "cough", "bumped mic", "bg noise"];
-    smartAudioProvider.preload('buttonClick', 'assets/audio/beep.mp3')
+    platform.ready().then(() => {
+      smartAudioProvider.preload('buttonClick', 'assets/audio/beep.mp3')
+    });
   }
 
   getUpdate() {
@@ -78,5 +82,28 @@ export class HomePage {
     } else {
       this.timeLog += "\n" + this.formatTime(this.time) + " : " + this.button;
     }
+  }
+
+  clearText() {
+    let alert = this.alertController.create({
+    title: 'Confirm clear text',
+    message: 'Are you sure you want to clear the time log?',
+    buttons: [
+      {
+        text: 'Cancel',
+        role: 'cancel',
+        handler: () => {
+          console.log("clicked cancel");
+        }
+      },
+      {
+        text: 'Clear',
+        handler: () => {
+          this.timeLog = '';
+        }
+      }
+    ]
+  });
+  alert.present();
   }
 }
