@@ -17,15 +17,18 @@ export class StopwatchService {
     }
 
     start() {
-        this.startAt = 0;
-        this.startAt += 1;
+        this.startAt = this._now();
     }
 
     update() {
-      return this.startAt += 1;
+      return this._now() - this.startAt;
     }
 
     time() {
         return this.startAt;
+    }
+
+    _now() {
+      return new Date().getTime();
     }
 }

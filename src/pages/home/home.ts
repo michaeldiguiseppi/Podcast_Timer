@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 import { StopwatchService } from './StopwatchService';
+import { SmartAudioProvider } from '../../providers/smart-audio/smart-audio';
 
 @Component({
   selector: 'page-home',
@@ -12,12 +13,17 @@ export class HomePage {
   started: boolean;
   button: string = '';
   stopwatchService: StopwatchService;
+  smartAudioProvider: SmartAudioProvider;
   timer: any;
+  values: string[];
 
-  constructor(public navCtrl: NavController, stopwatchService: StopwatchService) {
+  constructor(public navCtrl: NavController, stopwatchService: StopwatchService, smartAudioProvider: SmartAudioProvider) {
     this.stopwatchService = stopwatchService;
+    this.smartAudioProvider = smartAudioProvider;
     this.time = 0;
     this.started = false;
+    this.values = ["button 1", "button 2", "button 3", "cough", "bumped mic", "bg noise"];
+    smartAudioProvider.preload('buttonClick', 'assets/audio/beep.mp3')
   }
 
   getUpdate() {
@@ -29,18 +35,23 @@ export class HomePage {
   }
 
   startStopwatch() {
-    this.timer = setInterval(this.getUpdate(), 1);
+    this.timer = setInterval(this.getUpdate(), 10);
+    this.started = true;
     this.stopwatchService.start();
   }
 
   stopStopwatch() {
+    this.started = false;
     clearInterval(this.timer);
   }
 
   resetStopwatch() {
-      this.stopwatchService.reset();
-      this.time = 0;
-      this.started = false;
+    if (this.started) {
+      this.stopStopwatch();
+    }
+    this.stopwatchService.reset();
+    this.time = 0;
+    this.started = false;
   }
 
   formatTime(timeMs: number) {
@@ -48,18 +59,24 @@ export class HomePage {
           seconds: string;
 
 
-      minutes = Math.floor(timeMs / 60000).toString();
-      seconds = ((timeMs % 60000) / 1000).toFixed(3);
+      minutes = Math.floor(timeMs / 1000 / 60).toString();
+      seconds = ((timeMs / 1000) % 60).toFixed(3);
       return minutes + ':' + (+seconds < 10 ? '0' : '') + seconds;
   }
 
+  buttonClick() {
+    this.smartAudioProvider.play('buttonClick');
+  }
+
+
   populateText(time: number, button: string) {
+    this.buttonClick();
     this.time = time;
     this.button = button;
     if (this.timeLog === '') {
-      this.timeLog += this.time + " : " + this.button;
+      this.timeLog += this.formatTime(this.time) + " : " + this.button;
     } else {
-      this.timeLog += "\n" + this.time + " : " + this.button;
+      this.timeLog += "\n" + this.formatTime(this.time) + " : " + this.button;
     }
   }
 }
