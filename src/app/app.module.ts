@@ -4,6 +4,7 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { StopwatchService } from '../pages/home/StopwatchService';
+import { TimerComponent } from '../pages/home/timer.component';
 import { NativeAudio } from '@ionic-native/native-audio';
 
 import { MyApp } from './app.component';
@@ -32,6 +33,7 @@ import { SmartAudioProvider } from '../providers/smart-audio/smart-audio';
     SmartAudioProvider,
     NativeAudio,
     SmartAudioProvider,
+    TimerComponent,
   ]
 })
 export class AppModule {}

@@ -24,9 +24,18 @@
       block
       color="secondary"
       (click)="startStopwatch()"
-      *ngIf="!started"
+      *ngIf="time===0"
     >
       Start
+    </button>
+    <button
+      ion-button
+      block
+      color="secondary"
+      (click)="resumeStopwatch()"
+      [disabled]="started"
+    >
+      Resume
     </button>
     <button
       ion-button
@@ -41,7 +50,7 @@
   <ion-list text-center>
     <div *ngFor="let val of values;" class="inline-block">
       <button
-        ion-button 
+        ion-button
         color="default"
         round
         class="fixed-button"

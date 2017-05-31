@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, Platform, AlertController } from 'ionic-angular';
 import { StopwatchService } from './StopwatchService';
 import { SmartAudioProvider } from '../../providers/smart-audio/smart-audio';
+import { TimerComponent } from './timer.component';
 
 @Component({
   selector: 'page-home',
@@ -17,11 +18,13 @@ export class HomePage {
   alertController: AlertController;
   timer: any;
   values: string[];
+  timerComponent: TimerComponent;
 
-  constructor(public navCtrl: NavController, alertController: AlertController, platform: Platform, stopwatchService: StopwatchService, smartAudioProvider: SmartAudioProvider) {
+  constructor(public navCtrl: NavController, alertController: AlertController, platform: Platform, stopwatchService: StopwatchService, smartAudioProvider: SmartAudioProvider, timerComponent: TimerComponent) {
     this.stopwatchService = stopwatchService;
     this.smartAudioProvider = smartAudioProvider;
     this.alertController = alertController;
+    this.timerComponent = timerComponent;
     this.time = 0;
     this.started = false;
     this.values = ["button 1", "button 2", "button 3", "cough", "bumped mic", "bg noise"];
@@ -30,30 +33,56 @@ export class HomePage {
     });
   }
 
-  getUpdate() {
-      let self = this;
-
-      return () => {
-          self.time = this.stopwatchService.update();
-      };
-  }
-
   startStopwatch() {
-    this.timer = setInterval(this.getUpdate(), 10);
-    this.started = true;
-    this.stopwatchService.start();
+    console.warn("Started")
+    this.timerComponent.start()
   }
 
   stopStopwatch() {
-    this.started = false;
-    clearInterval(this.timer);
+    console.warn("Stopped")
+    this.timerComponent.pauseAndResume();
+  }
+
+  resumeStopwatch() {
+    console.warn("Resume")
+    this.timerComponent.pauseAndResume();
   }
 
   resetStopwatch() {
-    this.stopwatchService.reset();
-    this.time = 0;
-    this.started = false;
+    console.warn("Reset")
+    this.timerComponent.reset();
   }
+
+  // getUpdate() {
+  //     let self = this;
+  //     return () => {
+  //         self.time = this.stopwatchService.update();
+  //     };
+  // }
+  //
+  // startStopwatch() {
+  //   this.timer = setInterval(this.getUpdate(), 10);
+  //   this.started = true;
+  //   this.stopwatchService.start();
+  // }
+  //
+  // resumeStopwatch() {
+  //   this.timer = setInterval(this.getUpdate(), 10);
+  //   this.started = true;
+  //   this.stopwatchService.resume();
+  // }
+  //
+  // stopStopwatch() {
+  //   this.started = false;
+  //   this.stopwatchService.pause();
+  //   clearInterval(this.timer);
+  // }
+  //
+  // resetStopwatch() {
+  //   this.stopwatchService.reset();
+  //   this.time = 0;
+  //   this.started = false;
+  // }
 
   formatTime(timeMs: number) {
       let minutes: string,
@@ -90,7 +119,6 @@ export class HomePage {
         text: 'Cancel',
         role: 'cancel',
         handler: () => {
-          console.log("clicked cancel");
         }
       },
       {
