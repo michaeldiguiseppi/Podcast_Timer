@@ -10,13 +10,13 @@ import { SmartAudioProvider } from '../../providers/smart-audio/smart-audio';
 export class HomePage {
   timeLog: string = '';
   time: number;
-  started: boolean;
   button: string = '';
+  started: boolean;
   stopwatchService: StopwatchService;
   smartAudioProvider: SmartAudioProvider;
   alertController: AlertController;
-  timer: any;
   values: string[];
+  color: string;
 
   constructor(public navCtrl: NavController, alertController: AlertController, platform: Platform, stopwatchService: StopwatchService, smartAudioProvider: SmartAudioProvider) {
     this.stopwatchService = stopwatchService;
@@ -24,6 +24,7 @@ export class HomePage {
     this.alertController = alertController;
     this.time = 0;
     this.started = false;
+    this.color = "danger";
     this.values = ["button 1", "button 2", "button 3", "cough", "bumped mic", "bg noise"];
     platform.ready().then(() => {
       smartAudioProvider.preload('buttonClick', 'assets/audio/beep.mp3')
@@ -32,55 +33,24 @@ export class HomePage {
   }
 
   startStopwatch() {
-    console.warn("Started")
+    this.started = true;
     this.stopwatchService.start()
   }
 
-  stopStopwatch() {
-    console.warn("Stopped")
-    this.stopwatchService.pauseAndResume();
-  }
-
-  resumeStopwatch() {
-    console.warn("Resume")
+  stopResumeStopwatch() {
+    this.started = !this.started;
+    if (this.started) {
+      this.color = "danger";
+    } else {
+      this.color = "secondary";
+    }
     this.stopwatchService.pauseAndResume();
   }
 
   resetStopwatch() {
-    console.warn("Reset")
+    this.started = false;
     this.stopwatchService.reset();
   }
-
-  // getUpdate() {
-  //     let self = this;
-  //     return () => {
-  //         self.time = this.stopwatchService.update();
-  //     };
-  // }
-  //
-  // startStopwatch() {
-  //   this.timer = setInterval(this.getUpdate(), 10);
-  //   this.started = true;
-  //   this.stopwatchService.start();
-  // }
-  //
-  // resumeStopwatch() {
-  //   this.timer = setInterval(this.getUpdate(), 10);
-  //   this.started = true;
-  //   this.stopwatchService.resume();
-  // }
-  //
-  // stopStopwatch() {
-  //   this.started = false;
-  //   this.stopwatchService.pause();
-  //   clearInterval(this.timer);
-  // }
-  //
-  // resetStopwatch() {
-  //   this.stopwatchService.reset();
-  //   this.time = 0;
-  //   this.started = false;
-  // }
 
   formatTime(timeMs: number) {
       let minutes: string,
