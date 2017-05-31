@@ -49,6 +49,7 @@ export class HomePage {
 
   resetStopwatch() {
     this.started = false;
+    this.color = "danger";
     this.stopwatchService.reset();
   }
 

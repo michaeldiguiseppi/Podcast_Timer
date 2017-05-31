@@ -17,25 +17,21 @@
         <button
           ion-button
           block
+          color="secondary"
+          (click)="startStopwatch()"
+          *ngIf="time===0"
+        >
+          Start
+        </button>
+        <button
+          ion-button
+          block
           [color]="color"
           (click)="stopResumeStopwatch()"
           *ngIf="time > 0"
           class="col-lg-6"
         >
           Stop/Resume
-        </button>
-      </ion-col>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <button
-          ion-button
-          block
-          color="secondary"
-          (click)="startStopwatch()"
-          *ngIf="time===0"
-        >
-          Start
         </button>
       </ion-col>
     </ion-row>
