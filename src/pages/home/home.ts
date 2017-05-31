@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { NavController, Platform, AlertController } from 'ionic-angular';
 import { StopwatchService } from './StopwatchService';
 import { SmartAudioProvider } from '../../providers/smart-audio/smart-audio';
-import { TimerComponent } from './timer.component';
 
 @Component({
   selector: 'page-home',
@@ -18,39 +17,38 @@ export class HomePage {
   alertController: AlertController;
   timer: any;
   values: string[];
-  timerComponent: TimerComponent;
 
-  constructor(public navCtrl: NavController, alertController: AlertController, platform: Platform, stopwatchService: StopwatchService, smartAudioProvider: SmartAudioProvider, timerComponent: TimerComponent) {
+  constructor(public navCtrl: NavController, alertController: AlertController, platform: Platform, stopwatchService: StopwatchService, smartAudioProvider: SmartAudioProvider) {
     this.stopwatchService = stopwatchService;
     this.smartAudioProvider = smartAudioProvider;
     this.alertController = alertController;
-    this.timerComponent = timerComponent;
     this.time = 0;
     this.started = false;
     this.values = ["button 1", "button 2", "button 3", "cough", "bumped mic", "bg noise"];
     platform.ready().then(() => {
       smartAudioProvider.preload('buttonClick', 'assets/audio/beep.mp3')
     });
+    this.stopwatchService.timer.subscribe(totalTime => this.time = totalTime);
   }
 
   startStopwatch() {
     console.warn("Started")
-    this.timerComponent.start()
+    this.stopwatchService.start()
   }
 
   stopStopwatch() {
     console.warn("Stopped")
-    this.timerComponent.pauseAndResume();
+    this.stopwatchService.pauseAndResume();
   }
 
   resumeStopwatch() {
     console.warn("Resume")
-    this.timerComponent.pauseAndResume();
+    this.stopwatchService.pauseAndResume();
   }
 
   resetStopwatch() {
     console.warn("Reset")
-    this.timerComponent.reset();
+    this.stopwatchService.reset();
   }
 
   // getUpdate() {

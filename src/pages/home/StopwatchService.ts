@@ -1,58 +1,79 @@
 import { Injectable } from '@angular/core';
+import { Observable, Subscription, Observer } from 'rxjs/Rx';
 
+interface Interval {
+  start: number;
+  stop?: number;
+}
 
 @Injectable()
 export class StopwatchService {
 
-    private startAt: number;
+  timer: Observable<number>;
+  intervals: Interval[] = [];
 
-    constructor() {
-        this.reset();
+  private emitter: Observer<number>;
+  private paused = null;
+  private updateSubscription: Subscription;
+
+  constructor() {
+    this.timer = Observable.create(e => this.emitter = e);
+  }
+
+  startObservable() {
+    this.updateSubscription = Observable.interval(10).subscribe(this.updateTime.bind(this));
+  }
+
+  stopObservable() {
+    if (this.updateSubscription) {
+      this.updateSubscription.unsubscribe();
     }
+  }
 
+  start() {
+    this.reset();
+    this.paused = false;
+    this.intervals.push({
+      start: Date.now(),
+    });
+    this.startObservable();
+  }
 
-    reset() {
-        this.startAt = 0;
-        return this.startAt;
+  reset() {
+    this.paused = null;
+    this.emitter.next(0);
+    this.intervals = [];
+    this.stopObservable();
+  }
+
+  pauseAndResume() {
+    if (this.intervals[this.intervals.length - 1].stop) {
+      this.startNewInterval();
+      this.paused = false;
+      this.startObservable();
+    } else {
+      this.intervals[this.intervals.length - 1].stop = Date.now();
+      this.paused = true;
+      this.stopObservable();
     }
+  }
 
-    start() {
-      if (this.startAt) {
-        console.warn("Already have startAt")
-        this.startAt = this.startAt - (this.startAt - this._now())
-        console.warn(this.startAt);
-        debugger;
-      } else {
-        console.warn("No startAt")
-        this.startAt;
-        console.warn(this.startAt);
-        debugger;
-      }
-      // this.startAt = this.startAt
-      //     ?
-      //     :
-    }
+  getIntervalTime(interval: Interval) {
+    const stopTime = interval.stop ? interval.stop : Date.now();
+    return stopTime - interval.start;
+  }
 
-    pause() {
-      this.startAt = this._now();
-      console.warn(this.startAt);
-    }
+  private startNewInterval() {
+    this.intervals.push({
+      start: Date.now(),
+    });
+  }
 
-    resume() {
-      this.start();
-    }
-
-    update() {
-      console.warn(this.startAt);
-      console.warn(this._now());
-      return this._now() - this.startAt;
-    }
-
-    time() {
-        return this.startAt;
-    }
-
-    _now() {
-      return new Date().getTime();
-    }
+  private updateTime() {
+    this.emitter.next(this.intervals.reduce((total, interval: Interval) => {
+      const stopTime = interval.stop ? interval.stop : Date.now();
+      total += this.getIntervalTime(interval);
+      return total;
+    }, 0));
+  }
 }
