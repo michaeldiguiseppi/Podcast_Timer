@@ -71,7 +71,6 @@ export class StopwatchService {
 
   private updateTime() {
     this.emitter.next(this.intervals.reduce((total, interval: Interval) => {
-      const stopTime = interval.stop ? interval.stop : Date.now();
       total += this.getIntervalTime(interval);
       return total;
     }, 0));

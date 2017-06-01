@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { NavController, Platform, AlertController } from 'ionic-angular';
 import { StopwatchService } from './StopwatchService';
 import { SmartAudioProvider } from '../../providers/smart-audio/smart-audio';
+import { Storage } from '@ionic/storage';
 
 @Component({
   selector: 'page-home',
@@ -17,15 +18,24 @@ export class HomePage {
   alertController: AlertController;
   values: string[];
   color: string;
+  storage: Storage;
 
-  constructor(public navCtrl: NavController, alertController: AlertController, platform: Platform, stopwatchService: StopwatchService, smartAudioProvider: SmartAudioProvider) {
+  constructor(public navCtrl: NavController, alertController: AlertController, platform: Platform, stopwatchService: StopwatchService, smartAudioProvider: SmartAudioProvider, storage: Storage) {
     this.stopwatchService = stopwatchService;
     this.smartAudioProvider = smartAudioProvider;
     this.alertController = alertController;
     this.time = 0;
     this.started = false;
     this.color = "danger";
-    this.values = ["Edit", "Cut", "Noise", "Highlight", "Course Walk", "Looking Ahead", "Mental", "Game Plan", "Setup", "Tip"];
+    if (storage.get('buttons') !== undefined) {
+      storage.get('buttons').then((val) => {
+        if (val) {
+          this.values = val;
+        } else {
+          this.values = ["Edit", "Cut", "Noise", "Highlight", "Course Walk", "Looking Ahead", "Mental", "Game Plan", "Setup", "Tip"];
+        }
+      });
+    }
     platform.ready().then(() => {
       smartAudioProvider.preload('buttonClick', 'assets/audio/beep.mp3')
     });
