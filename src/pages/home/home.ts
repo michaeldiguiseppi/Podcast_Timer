@@ -25,7 +25,7 @@ export class HomePage {
     this.time = 0;
     this.started = false;
     this.color = "danger";
-    this.values = ["button 1", "button 2", "button 3", "cough", "bumped mic", "bg noise"];
+    this.values = ["Edit", "Cut", "Noise", "Highlight", "Course Walk", "Looking Ahead", "Mental", "Game Plan", "Setup", "Tip"];
     platform.ready().then(() => {
       smartAudioProvider.preload('buttonClick', 'assets/audio/beep.mp3')
     });
@@ -48,16 +48,32 @@ export class HomePage {
   }
 
   resetStopwatch() {
-    this.started = false;
-    this.color = "danger";
-    this.stopwatchService.reset();
+    let alert = this.alertController.create({
+      title: 'Reset Timer',
+      message: 'Are you sure you want to reset the timer?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+          handler: () => {
+          }
+        },
+        {
+          text: 'Reset',
+          handler: () => {
+            this.started = false;
+            this.color = "danger";
+            this.stopwatchService.reset();
+          }
+        }
+      ]
+    });
+    alert.present();
   }
 
   formatTime(timeMs: number) {
       let minutes: string,
           seconds: string;
-
-
       minutes = Math.floor(timeMs / 1000 / 60).toString();
       seconds = ((timeMs / 1000) % 60).toFixed(3);
       return minutes + ':' + (+seconds < 10 ? '0' : '') + seconds;
