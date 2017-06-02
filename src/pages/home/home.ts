@@ -3,6 +3,7 @@ import { NavController, Platform, AlertController } from 'ionic-angular';
 import { StopwatchService } from './StopwatchService';
 import { SmartAudioProvider } from '../../providers/smart-audio/smart-audio';
 import { Storage } from '@ionic/storage';
+import { SettingsPage } from '../settings/settings';
 
 @Component({
   selector: 'page-home',
@@ -27,18 +28,13 @@ export class HomePage {
     this.time = 0;
     this.started = false;
     this.color = "danger";
-    if (storage.get('buttons') !== undefined) {
-      storage.get('buttons').then((val) => {
-        if (val) {
-          this.values = val;
-        } else {
-          this.values = ["Edit", "Cut", "Noise", "Highlight", "Course Walk", "Looking Ahead", "Mental", "Game Plan", "Setup", "Tip"];
-        }
-      });
-    }
-    platform.ready().then(() => {
-      smartAudioProvider.preload('buttonClick', 'assets/audio/beep.mp3')
+    storage.get('buttonGrid').then((val) => {
+      if (val == null) {
+        navCtrl.setRoot(SettingsPage);
+      }
+      this.values = Object.keys(val).map((key) => { return val[key] }) || ["Edit", "Cut", "Noise", "Highlight", "Course Walk", "Looking Ahead", "Mental", "Game Plan", "Setup", "Tip"];
     });
+    smartAudioProvider.preload('buttonClick', 'assets/audio/beep.mp3')
     this.stopwatchService.timer.subscribe(totalTime => this.time = totalTime);
   }
 

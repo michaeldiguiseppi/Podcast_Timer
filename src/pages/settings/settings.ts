@@ -16,26 +16,35 @@ import { HomePage } from '../../pages/home/home';
   templateUrl: 'settings.html',
 })
 export class SettingsPage {
-  buttonGrid: string[];
-  totalButtons: string[];
+  buttonGrid: object;
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public storage: Storage, public alertController: AlertController) {
-    this.buttonGrid = ["Edit", "Cut", "Noise", "Highlight", "Course Walk", "Looking Ahead", "Mental", "Game Plan", "Setup", "Tip"];
     this.alertController = alertController;
-    this.totalButtons = [];
-    this.buttonGrid.forEach((button) => {
-      storage.get(button).then((val) => {
-        this.totalButtons.push(val);
-      })
-    })
-    // TODO: Set up to store each button as it's own key: value pair, then get and push to new array to populate buttons.
-    // storage.get("buttons").then((val) => {
-    //   this.buttonGrid = val;
-    // });
+    this.buttonGrid = {
+      button1: "Edit",
+      button2: "Cut",
+      button3: "Noise",
+      button4: "Highlight",
+      button5: "Course Walk",
+      button6: "Looking Ahead",
+      button7: "Mental",
+      button8: "Game Plan",
+      button9: "Setup",
+      button10: "Tip",
+    };
+    if (this.storage.get("buttonGrid")) {
+      this.storage.get("buttonGrid").then((val) => {
+        if (val) {
+          this.buttonGrid = val;
+        }
+      });
+    } else {
+      this.storage.set("buttonGrid", this.buttonGrid);
+    }
   }
 
   saveButtons() {
-    this.storage.set("buttons", this.buttonGrid);
+    this.storage.set("buttonGrid", this.buttonGrid);
     let alert = this.alertController.create({
       title: 'Buttons Saved',
       message: 'Go to timer or continue editing?',
