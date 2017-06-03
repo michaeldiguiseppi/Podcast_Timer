@@ -7,6 +7,7 @@ export class SmartAudioProvider {
 
     audioType: string = 'html5';
     sounds: any = [];
+    public count: number;
 
     constructor(public nativeAudio: NativeAudio, platform: Platform) {
 

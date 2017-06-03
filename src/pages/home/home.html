@@ -63,14 +63,14 @@
     </ion-row>
   </ion-grid>
   <ion-list text-center>
-    <div *ngFor="let val of values;" class="inline-block">
+    <div *ngFor="let val of values; let i = index" class="inline-block">
       <button
         ion-button
         color="default"
         round
         class="fixed-button"
         [disabled]="!started"
-        (click)="populateText(time, val)"
+        (click)="populateText(time, val, i)"
         >
           {{ val }}
       </button>

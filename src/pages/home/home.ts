@@ -34,7 +34,18 @@ export class HomePage {
       }
       this.values = Object.keys(val).map((key) => { return val[key] }) || ["Edit", "Cut", "Noise", "Highlight", "Course Walk", "Looking Ahead", "Mental", "Game Plan", "Setup", "Tip"];
     });
-    smartAudioProvider.preload('buttonClick', 'assets/audio/beep.mp3')
+    platform.ready().then(() => {
+      smartAudioProvider.preload('beep1', 'assets/audio/beep1.mp3');
+      smartAudioProvider.preload('beep2', 'assets/audio/beep2.mp3');
+      smartAudioProvider.preload('beep3', 'assets/audio/beep3.mp3');
+      smartAudioProvider.preload('beep4', 'assets/audio/beep4.mp3');
+      smartAudioProvider.preload('beep5', 'assets/audio/beep5.mp3');
+      smartAudioProvider.preload('beep6', 'assets/audio/beep6.mp3');
+      smartAudioProvider.preload('beep7', 'assets/audio/beep7.mp3');
+      smartAudioProvider.preload('beep8', 'assets/audio/beep8.mp3');
+      smartAudioProvider.preload('beep9', 'assets/audio/beep9.mp3');
+      smartAudioProvider.preload('beep10', 'assets/audio/beep10.mp3');
+    });
     this.stopwatchService.timer.subscribe(totalTime => this.time = totalTime);
   }
 
@@ -85,13 +96,47 @@ export class HomePage {
       return minutes + ':' + (+seconds < 10 ? '0' : '') + seconds;
   }
 
-  buttonClick() {
-    this.smartAudioProvider.play('buttonClick');
+  buttonClick(buttonNum) {
+    switch(buttonNum) {
+      case 1:
+        this.smartAudioProvider.play('beep1');
+        break;
+      case 2:
+        this.smartAudioProvider.play('beep2');
+        break;
+      case 3:
+        this.smartAudioProvider.play('beep3');
+        break;
+      case 4:
+        this.smartAudioProvider.play('beep4');
+        break;
+      case 5:
+        this.smartAudioProvider.play('beep5');
+        break;
+      case 6:
+        this.smartAudioProvider.play('beep6');
+        break;
+      case 7:
+        this.smartAudioProvider.play('beep7');
+        break;
+      case 8:
+        this.smartAudioProvider.play('beep8');
+        break;
+      case 9:
+        this.smartAudioProvider.play('beep9');
+        break;
+      case 10:
+        this.smartAudioProvider.play('beep10');
+        break;
+      default:
+        break;
+    }
   }
 
 
-  populateText(time: number, button: string) {
-    this.buttonClick();
+  populateText(time: number, button: string, buttonNum: number,) {
+    console.log(buttonNum + 1);
+    this.buttonClick(buttonNum + 1);
     this.time = time;
     this.button = button;
     if (this.timeLog === '') {
