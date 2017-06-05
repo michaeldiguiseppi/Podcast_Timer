@@ -27,17 +27,8 @@ export class HomePage {
     this.alertController = alertController;
     this.storage = storage;
     this.time = 0;
-    if (!this.started) {
-      this.started = false;
-    }
-    this.storage.get('started').then((val) => {
-      if (val) {
-        this.started = val;
-      } else {
-        this.started = false;
-      }
-    });
-    this.color = "danger";
+    this.started = false;
+    this.color = (this.started) ? "danger" : "secondary";
     this.storage.get('buttonGrid').then((val) => {
       if (val == null) {
         this.storage.set('started', this.started);
@@ -46,13 +37,7 @@ export class HomePage {
         this.values = Object.keys(val).map((key) => { return val[key] }) || ["Edit", "Cut", "Noise", "Highlight", "Course Walk", "Looking Ahead", "Mental", "Game Plan", "Setup", "Tip"];
       }
     });
-    this.storage.get('timeLog').then((val) => {
-      if (val == null) {
-        this.timeLog = '';
-      } else {
-        this.timeLog = val;
-      }
-    });
+    this.timeLog = '';
     platform.ready().then(() => {
       smartAudioProvider.preload('beep1', 'assets/audio/beep1.mp3');
       smartAudioProvider.preload('beep2', 'assets/audio/beep2.mp3');
@@ -74,6 +59,22 @@ export class HomePage {
         this.time = val;
       }
     });
+    this.storage.get('timeLog').then((val) => {
+      if (val == null) {
+        this.timeLog = '';
+      } else {
+        this.timeLog = val;
+      }
+    });
+    this.storage.get('started').then((val) => {
+      if (val) {
+        this.started = val;
+        this.color = (this.started) ? "danger" : "secondary";
+      } else {
+        this.started = false;
+        this.color = "secondary";
+      }
+    });
   }
 
   ionViewWillLeave() {
@@ -83,17 +84,15 @@ export class HomePage {
   startStopwatch() {
     this.started = true;
     this.storage.set('started', this.started);
+    this.color = (this.started) ? "danger" : "secondary";
     this.stopwatchService.start()
   }
 
   stopResumeStopwatch() {
     this.started = !this.started;
-    if (this.started) {
-      this.color = "danger";
-    } else {
-      this.color = "secondary";
-    }
+    this.color = (this.started) ? "danger" : "secondary";
     this.storage.set('started', this.started);
+    this.storage.set('time', this.time);
     this.stopwatchService.pauseAndResume();
   }
 
@@ -113,7 +112,8 @@ export class HomePage {
           handler: () => {
             this.started = false;
             this.storage.set('started', this.started);
-            this.color = "danger";
+            this.color = (this.started) ? "danger" : "secondary";
+            this.storage.set('time', 0);
             this.stopwatchService.reset();
           }
         }
