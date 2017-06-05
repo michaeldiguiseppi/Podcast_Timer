@@ -42,8 +42,9 @@ export class HomePage {
       if (val == null) {
         this.storage.set('started', this.started);
         navCtrl.setRoot(SettingsPage);
+      } else {
+        this.values = Object.keys(val).map((key) => { return val[key] }) || ["Edit", "Cut", "Noise", "Highlight", "Course Walk", "Looking Ahead", "Mental", "Game Plan", "Setup", "Tip"];
       }
-      this.values = Object.keys(val).map((key) => { return val[key] }) || ["Edit", "Cut", "Noise", "Highlight", "Course Walk", "Looking Ahead", "Mental", "Game Plan", "Setup", "Tip"];
     });
     this.storage.get('timeLog').then((val) => {
       if (val == null) {
@@ -65,6 +66,18 @@ export class HomePage {
       smartAudioProvider.preload('beep10', 'assets/audio/beep10.mp3');
     });
     this.stopwatchService.timer.subscribe(totalTime => this.time = totalTime);
+  }
+
+  ionViewWillEnter() {
+    this.storage.get('time').then((val) => {
+      if (val !== null || val !== undefined) {
+        this.time = val;
+      }
+    });
+  }
+
+  ionViewWillLeave() {
+    this.storage.set('time', this.time);
   }
 
   startStopwatch() {
