@@ -25,14 +25,29 @@ export class HomePage {
     this.stopwatchService = stopwatchService;
     this.smartAudioProvider = smartAudioProvider;
     this.alertController = alertController;
+    this.storage = storage;
     this.time = 0;
-    this.started = false;
+    this.storage.get('started').then((val) => {
+      if (val == null) {
+        this.started = false;
+      } else {
+        this.started = val;
+      }
+    })
+    this.storage.set('started', this.started);
     this.color = "danger";
-    storage.get('buttonGrid').then((val) => {
+    this.storage.get('buttonGrid').then((val) => {
       if (val == null) {
         navCtrl.setRoot(SettingsPage);
       }
       this.values = Object.keys(val).map((key) => { return val[key] }) || ["Edit", "Cut", "Noise", "Highlight", "Course Walk", "Looking Ahead", "Mental", "Game Plan", "Setup", "Tip"];
+    });
+    this.storage.get('timeLog').then((val) => {
+      if (val == null) {
+        this.timeLog = '';
+      } else {
+        this.timeLog = val;
+      }
     });
     platform.ready().then(() => {
       smartAudioProvider.preload('beep1', 'assets/audio/beep1.mp3');
@@ -51,16 +66,21 @@ export class HomePage {
 
   startStopwatch() {
     this.started = true;
+    this.storage.set('started', this.started);
     this.stopwatchService.start()
   }
 
   stopResumeStopwatch() {
-    this.started = !this.started;
+    this.storage.get('started').then((val) => {
+      this.started = val;
+    });
     if (this.started) {
       this.color = "danger";
     } else {
       this.color = "secondary";
     }
+    this.started = !this.started;
+    this.storage.set('started', this.started);
     this.stopwatchService.pauseAndResume();
   }
 
@@ -79,6 +99,7 @@ export class HomePage {
           text: 'Reset',
           handler: () => {
             this.started = false;
+            this.storage.set('started', this.started);
             this.color = "danger";
             this.stopwatchService.reset();
           }
@@ -135,7 +156,6 @@ export class HomePage {
 
 
   populateText(time: number, button: string, buttonNum: number,) {
-    console.log(buttonNum + 1);
     this.buttonClick(buttonNum + 1);
     this.time = time;
     this.button = button;
@@ -144,6 +164,7 @@ export class HomePage {
     } else {
       this.timeLog += "\n" + this.formatTime(this.time) + " : " + this.button;
     }
+    this.storage.set('timeLog', this.timeLog);
   }
 
   clearText() {
@@ -160,6 +181,7 @@ export class HomePage {
       {
         text: 'Clear',
         handler: () => {
+          this.storage.set('timeLog', "");
           this.timeLog = '';
         }
       }
