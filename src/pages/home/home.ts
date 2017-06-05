@@ -27,17 +27,20 @@ export class HomePage {
     this.alertController = alertController;
     this.storage = storage;
     this.time = 0;
+    if (!this.started) {
+      this.started = false;
+    }
     this.storage.get('started').then((val) => {
-      if (val == null) {
-        this.started = false;
-      } else {
+      if (val) {
         this.started = val;
+      } else {
+        this.started = false;
       }
-    })
-    this.storage.set('started', this.started);
+    });
     this.color = "danger";
     this.storage.get('buttonGrid').then((val) => {
       if (val == null) {
+        this.storage.set('started', this.started);
         navCtrl.setRoot(SettingsPage);
       }
       this.values = Object.keys(val).map((key) => { return val[key] }) || ["Edit", "Cut", "Noise", "Highlight", "Course Walk", "Looking Ahead", "Mental", "Game Plan", "Setup", "Tip"];
@@ -71,15 +74,12 @@ export class HomePage {
   }
 
   stopResumeStopwatch() {
-    this.storage.get('started').then((val) => {
-      this.started = val;
-    });
+    this.started = !this.started;
     if (this.started) {
       this.color = "danger";
     } else {
       this.color = "secondary";
     }
-    this.started = !this.started;
     this.storage.set('started', this.started);
     this.stopwatchService.pauseAndResume();
   }

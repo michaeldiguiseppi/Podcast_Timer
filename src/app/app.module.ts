@@ -3,6 +3,7 @@ import { ErrorHandler, NgModule } from '@angular/core';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
+import { Keyboard } from '@ionic-native/keyboard';
 import { StopwatchService } from '../pages/home/StopwatchService';
 import { NativeAudio } from '@ionic-native/native-audio';
 import { IonicStorageModule } from '@ionic/storage';
@@ -32,6 +33,7 @@ import { SmartAudioProvider } from '../providers/smart-audio/smart-audio';
   providers: [
     StatusBar,
     SplashScreen,
+    Keyboard,
     {provide: ErrorHandler, useClass: IonicErrorHandler},
     StopwatchService,
     SmartAudioProvider,
